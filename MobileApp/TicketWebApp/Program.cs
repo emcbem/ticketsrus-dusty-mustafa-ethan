@@ -1,10 +1,15 @@
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using System.Text.Json.Serialization;
 using TicketClassLib.Services;
-using TicketWebApp.Components;
 using TicketWebApp.Data;
 using TicketWebApp.Services;
+using TicketWebApp.Components;
+using OpenTelemetry.Logs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +27,32 @@ builder.Services.AddSingleton<ITicketService, ApiTicketService>();
 builder.Services.AddSingleton<IEventService, ApiEventService>();
 builder.Services.AddDbContextFactory<PostgresContext>(optionsBuilder => optionsBuilder.UseNpgsql("Name=TicketsDB"));
 builder.Services.AddScoped<EmailSender>();
+builder.Services.AddHealthChecks();
+
+const string serviceName = "thingy";
+
+builder.Logging.AddOpenTelemetry(options =>
+{
+    options
+        .SetResourceBuilder(
+            ResourceBuilder.CreateDefault()
+                .AddService(serviceName))
+        .AddConsoleExporter();
+});
+
+ builder.Services.AddOpenTelemetry()
+      .ConfigureResource(resource => resource.AddService(serviceName))
+      .WithTracing(tracing => tracing
+          .AddAspNetCoreInstrumentation()
+          .AddConsoleExporter()
+          .AddOtlpExporter())
+      .WithMetrics(metrics => metrics
+          .AddAspNetCoreInstrumentation()
+          .AddConsoleExporter()
+          .AddOtlpExporter());
+
+
+
 
 var app = builder.Build();
 
@@ -34,14 +65,16 @@ if (!app.Environment.IsDevelopment())
     
 }
 
-app.MapGet("/healthCheck", () =>
-{
-    if(DateTime.Now.Second % 10 < 5)
+app.MapHealthChecks("/healthCheck", new HealthCheckOptions
     {
-        return "Okay";
-    }
-    throw new Exception("BAD! unhealthy");
-});
+        AllowCachingResponses = false,
+        ResultStatusCodes = 
+        {
+            [HealthStatus.Healthy] = StatusCodes.Status200OK,
+            [HealthStatus.Degraded] = StatusCodes.Status200OK,
+            [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
+        }
+    });
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>
