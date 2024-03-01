@@ -1,4 +1,5 @@
 ﻿@page "/"
+@inject ILogger<Home> log
 
 <PageTitle>Home</PageTitle>
 
@@ -7,4 +8,11 @@
 Buy Tickets and scan your ticket at the gate.<br />
 <a href="/all"<button class="btn btn-primary m-5">Buy Tickets Today!</button></a>
 
+@code
+{
+    protected override void OnInitialized()
+    {
+        log.LogInformation("We started!");
+    }
+}
 

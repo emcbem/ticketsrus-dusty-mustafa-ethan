@@ -10,6 +10,7 @@ using TicketWebApp.Data;
 using TicketWebApp.Services;
 using TicketWebApp.Components;
 using OpenTelemetry.Logs;
+using System.Diagnostics.Tracing;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,7 @@ builder.Services.AddSingleton<IEventService, ApiEventService>();
 builder.Services.AddDbContextFactory<PostgresContext>(optionsBuilder => optionsBuilder.UseNpgsql("Name=TicketsDB"));
 builder.Services.AddScoped<EmailSender>();
 builder.Services.AddHealthChecks();
+builder.Services.AddLogging();
 
 const string serviceName = "thingy";
 
@@ -37,6 +39,10 @@ builder.Logging.AddOpenTelemetry(options =>
         .SetResourceBuilder(
             ResourceBuilder.CreateDefault()
                 .AddService(serviceName))
+        .AddOtlpExporter(o =>
+        {
+            o.Endpoint = new Uri("http://otel-collector:4317/");
+        })
         .AddConsoleExporter();
 });
 
@@ -45,11 +51,13 @@ builder.Logging.AddOpenTelemetry(options =>
       .WithTracing(tracing => tracing
           .AddAspNetCoreInstrumentation()
           .AddConsoleExporter()
-          .AddOtlpExporter())
+          .AddOtlpExporter(o =>
+            o.Endpoint = new Uri("http://otel-collector:4317/")))
       .WithMetrics(metrics => metrics
           .AddAspNetCoreInstrumentation()
           .AddConsoleExporter()
-          .AddOtlpExporter());
+          .AddOtlpExporter(o =>
+            o.Endpoint = new Uri("http://otel-collector:4317/")));
 
 
 

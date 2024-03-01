@@ -99,7 +99,6 @@ services:
       otel:
 
   otel-collector:
-    # https://github.com/open-telemetry/opentelemetry-collector-contrib/releases
     container_name: otel
     hostname: otel
     image: otel/opentelemetry-collector-contrib:0.75.0

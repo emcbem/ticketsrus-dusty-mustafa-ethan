@@ -9,8 +9,6 @@ exporters:
     endpoint: otel:8889
   loki:
     endpoint: http://loki:3100/loki/api/v1/push
-    tls:
-      insecure: true
 
 extensions:
   health_check:
@@ -24,9 +22,9 @@ processors:
 service:
   extensions: [zpages, health_check]  # Enable zpages
   pipelines:
-    metrics:
-      receivers: [otlp]
-      exporters: [prometheus]
+    # metrics:
+    #   receivers: [otlp]
+    #   exporters: [prometheus]
     logs:
       receivers: [otlp]
       processors: [batch]
