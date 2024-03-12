@@ -15,7 +15,7 @@ namespace UnitTestsRUs
         [Test]
         public void ChangingDatabaseTests()
         {
-            Assert.True(true);
+            Assert.True(false);
         }
 
         [Test]
