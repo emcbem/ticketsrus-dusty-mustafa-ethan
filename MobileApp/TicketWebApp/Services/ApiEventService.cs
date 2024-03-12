@@ -40,10 +40,10 @@ public class ApiEventService(IDbContextFactory<PostgresContext> dbFactory) : IEv
         using var context = await dbFactory.CreateDbContextAsync();
 
         return await context.Events
-            .Include(e=> e.Tickets)
+            .Include(e => e.Tickets)
             .ToListAsync();
     }
-    
+
     public async Task<Event?> GetEvent(int id)
     {
         using var context = await dbFactory.CreateDbContextAsync();
