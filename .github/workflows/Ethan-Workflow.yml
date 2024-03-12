@@ -22,6 +22,7 @@ jobs:
         working-directory: ./../../../../ticketsrus-dusty-mustafa-ethan/MobileApp/TicketWebApp/
       - name: "Unit tests"
         run: |
+            dotnet workload restore
             dotnet test --warnaserror
         working-directory: ./../../../../ticketsrus-dusty-mustafa-ethan/MobileApp/UnitTestsRUs
       - name: "Integration tests"
