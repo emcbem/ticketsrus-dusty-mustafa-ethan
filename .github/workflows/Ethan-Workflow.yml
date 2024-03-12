@@ -6,7 +6,7 @@ jobs:
     steps:
       - name: "Stop old compose"
         run: |
-            docker compose down -v
+            docker compose down -v || true
             cd ../../../
             rm -rf ./ticketsrus-dusty-mustafa-ethan/
         working-directory: ./../../../../ticketsrus-dusty-mustafa-ethan/MobileApp/EthansDockerFiles/
