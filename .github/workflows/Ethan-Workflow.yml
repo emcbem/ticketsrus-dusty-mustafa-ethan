@@ -35,4 +35,3 @@ jobs:
         if: steps.compose.outcome == 'success'
         with:
           webhook_url: ${{ secrets.TEAMS_WEBHOOK }}
-        
