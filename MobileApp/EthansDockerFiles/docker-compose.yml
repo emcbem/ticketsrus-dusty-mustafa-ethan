@@ -59,7 +59,7 @@ services:
     container_name: ethanprometheus
     image: prom/prometheus:v2.5.0
     ports:
-    - 9091:9090
+    - 9285:9090
     command:
     - --config.file=/etc/prometheus/prometheus.yml
     volumes:
