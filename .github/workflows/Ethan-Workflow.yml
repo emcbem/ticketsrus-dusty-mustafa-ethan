@@ -20,6 +20,14 @@ jobs:
             dotnet format --verify-no-changes
             dotnet build --warnaserror
         working-directory: ./../../../../ticketsrus-dusty-mustafa-ethan/MobileApp/TicketWebApp/
+      - name: "Unit tests"
+        run: |
+            dotnet test --warnaserror
+        working-directory: ./../../../../ticketsrus-dusty-mustafa-ethan/MobileApp/UnitTestsRUs
+      - name: "Integration tests"
+        run: |
+            dotnet test --warnaserror
+        working-directory: ./../../../../ticketsrus-dusty-mustafa-ethan/MobileApp/TestsRUS
       - name: "Run docker-compose up"
         id: compose
         run: |
