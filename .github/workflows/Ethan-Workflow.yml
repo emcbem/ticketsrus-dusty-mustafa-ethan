@@ -17,7 +17,7 @@ jobs:
         working-directory: ./../../../../
       - name: "Lint and Build Warnings"
         run: |
-            # docker run -i --rm -v $(pwd):/app -w /app/TicketWebApp mcr.microsoft.com/dotnet/sdk:8.0 dotnet format --verify-no-changes
+            docker run -i --rm -v $(pwd):/app -w /app/TicketWebApp mcr.microsoft.com/dotnet/sdk:8.0 dotnet format --verify-no-changes --dry-run
         working-directory: ./../../../../ticketsrus-dusty-mustafa-ethan/MobileApp/
       - name: "Run docker-compose up"
         id: compose
