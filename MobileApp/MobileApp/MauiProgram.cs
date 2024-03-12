@@ -27,9 +27,9 @@ namespace MobileApp
             builder.Services.AddScoped<IPreferenceSaver, MauiPreferenceSaver>();
 
 
-    		builder.Services.AddBlazorWebViewDeveloperTools();
-    		builder.Logging.AddDebug();
-    
+            builder.Services.AddBlazorWebViewDeveloperTools();
+            builder.Logging.AddDebug();
+
 
 
             return builder.Build();

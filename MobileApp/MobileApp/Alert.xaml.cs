@@ -15,6 +15,6 @@ public partial class Alert : ContentPage
 
     protected async void EndScan(object _, EventArgs e)
     {
-		await Application.Current?.MainPage?.Navigation.PopModalAsync()!;
+        await Application.Current?.MainPage?.Navigation.PopModalAsync()!;
     }
 }

@@ -46,18 +46,18 @@ builder.Logging.AddOpenTelemetry(options =>
         .AddConsoleExporter();
 });
 
- builder.Services.AddOpenTelemetry()
-      .ConfigureResource(resource => resource.AddService(serviceName))
-      .WithTracing(tracing => tracing
-          .AddAspNetCoreInstrumentation()
-          .AddConsoleExporter()
-          .AddOtlpExporter(o =>
-            o.Endpoint = new Uri("http://otel-collector:4317/")))
-      .WithMetrics(metrics => metrics
-          .AddAspNetCoreInstrumentation()
-          .AddConsoleExporter()
-          .AddOtlpExporter(o =>
-            o.Endpoint = new Uri("http://otel-collector:4317/")));
+builder.Services.AddOpenTelemetry()
+     .ConfigureResource(resource => resource.AddService(serviceName))
+     .WithTracing(tracing => tracing
+         .AddAspNetCoreInstrumentation()
+         .AddConsoleExporter()
+         .AddOtlpExporter(o =>
+           o.Endpoint = new Uri("http://otel-collector:4317/")))
+     .WithMetrics(metrics => metrics
+         .AddAspNetCoreInstrumentation()
+         .AddConsoleExporter()
+         .AddOtlpExporter(o =>
+           o.Endpoint = new Uri("http://otel-collector:4317/")));
 
 
 
@@ -70,19 +70,19 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
-    
+
 }
 
 app.MapHealthChecks("/healthCheck", new HealthCheckOptions
-    {
-        AllowCachingResponses = false,
-        ResultStatusCodes = 
+{
+    AllowCachingResponses = false,
+    ResultStatusCodes =
         {
             [HealthStatus.Healthy] = StatusCodes.Status200OK,
             [HealthStatus.Degraded] = StatusCodes.Status200OK,
             [HealthStatus.Unhealthy] = StatusCodes.Status503ServiceUnavailable
         }
-    });
+});
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>
@@ -100,4 +100,4 @@ app.MapRazorComponents<App>()
 app.MapControllers();
 app.Run();
 
-public partial class Program { } 
+public partial class Program { }

@@ -22,7 +22,7 @@ public class MobileTicketService : ITicketService
     {
         Task.Run(() => init.InitializeLocalDatabase()).Wait();
         this.init = init;
-  
+
     }
 
     public async Task<Ticket> AddTicket(Ticket ticket)
@@ -58,12 +58,12 @@ public class MobileTicketService : ITicketService
     {
         var context = init.EstablishConnection();
 
-       
-            var tickets = await context.GetAllWithChildrenAsync<Ticket>();
-            await context.CloseAsync();
-            return tickets;
 
-      
+        var tickets = await context.GetAllWithChildrenAsync<Ticket>();
+        await context.CloseAsync();
+        return tickets;
+
+
     }
 
     public async Task<TicketStatus> ScanTicket(Guid TicketId, int EventId)
@@ -72,7 +72,7 @@ public class MobileTicketService : ITicketService
 
         var tuc = await context.Table<Ticket>().FirstOrDefaultAsync(t => t.Id == TicketId);
 
-        if(tuc == null || tuc.Eventid != EventId)
+        if (tuc == null || tuc.Eventid != EventId)
         {
             return TicketStatus.Unrecognized;
         }

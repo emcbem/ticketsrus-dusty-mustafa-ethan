@@ -33,7 +33,7 @@ public class DataSync
         var alertPage = new Alert();
         var ticks = Preferences.Default.Get("refreshRate", 30);
         var timer = new PeriodicTimer(TimeSpan.FromSeconds(ticks));
-        while (Preferences.Default.Get("isOnline", false) && await timer.WaitForNextTickAsync()) 
+        while (Preferences.Default.Get("isOnline", false) && await timer.WaitForNextTickAsync())
         {
             var newTicks = Preferences.Default.Get("refreshRate", 30);
             timer = new PeriodicTimer(TimeSpan.FromSeconds(newTicks));
@@ -43,7 +43,7 @@ public class DataSync
                 await SyncEvents();
                 await SyncTickets();
             }
-            catch (AlreadyScannedTicketException ex) 
+            catch (AlreadyScannedTicketException ex)
             {
                 await Application.Current.MainPage.Navigation.PushModalAsync(alertPage);
             }
@@ -54,12 +54,12 @@ public class DataSync
     public async Task SyncTickets()
     {
         var differences = await GetTicketDifferences();
-        foreach ( var difference in differences ) 
-        { 
-            if(difference.Maui is null && difference.Api is not null)
-            { 
+        foreach (var difference in differences)
+        {
+            if (difference.Maui is null && difference.Api is not null)
+            {
                 var result = await ticketService.AddTicket(difference.Api);
-                if (result is null) 
+                if (result is null)
                 {
                     throw new Exception("Ticket was unsuccessfully added");
                 }
@@ -73,10 +73,10 @@ public class DataSync
                     throw new AlreadyScannedTicketException("A ticket was scanned twice");
                 }
             }
-            else if(difference.Api is not null)
+            else if (difference.Api is not null)
             {
                 var result = await ticketService.AddTicket(difference.Api);
-                if (result is null )
+                if (result is null)
                 {
                     throw new Exception("Error moving api data to maui");
                 }
@@ -113,11 +113,11 @@ public class DataSync
         List<Ticket> onlineTickets = await client.GetFromJsonAsync<List<Ticket>>($"{ApiAddress}/ticket/getAll");
         List<Ticket> localTickets = await ticketService.GetAll();
 
-        onlineTickets = onlineTickets.OrderBy(x => x.Id).ToList();  
-        localTickets = localTickets.OrderBy(x=> x.Id).ToList();
+        onlineTickets = onlineTickets.OrderBy(x => x.Id).ToList();
+        localTickets = localTickets.OrderBy(x => x.Id).ToList();
 
         HashSet<(Guid, DateTime)> localTicketsHash = new HashSet<(Guid, DateTime)>(localTickets.Select(x => (x.Id, x.Lastupdated)));
-    
+
         var onlineChanges = onlineTickets
             .Where(x => !localTicketsHash.Contains((x.Id, x.Lastupdated)))
             .Select(x => new Differences<Ticket>(localTickets.FirstOrDefault(y => y.Id == x.Id), x))
