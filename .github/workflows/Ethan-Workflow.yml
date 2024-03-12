@@ -12,7 +12,7 @@ jobs:
         working-directory: ./../../../../ticketsrus-dusty-mustafa-ethan/MobileApp/EthansDockerFiles/
       - name: "Clone repo"
         run: | 
-            git clone https://${{secrets.NOTGITHUB_PAT}}@github.com/SnowSE/ticketsrus-dusty-mustafa-ethan.git
+            git clone https://${{secrets.NOTGITHUB_PAT}}@github.com/emcbem/ticketsrus-dusty-mustafa-ethan.git
         working-directory: ./../../../../
       - name: "Run docker-compose up"
         id: compose
