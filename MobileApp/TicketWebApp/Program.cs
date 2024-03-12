@@ -56,7 +56,7 @@ builder.Services.AddOpenTelemetry()
            o.Endpoint = new Uri("http://otel-collector:4317/")))
      .WithMetrics(metrics => metrics
          .AddAspNetCoreInstrumentation()
-        // .AddConsoleExporter()
+         // .AddConsoleExporter()
          .AddOtlpExporter(o =>
            o.Endpoint = new Uri("http://otel-collector:4317/")));
 
