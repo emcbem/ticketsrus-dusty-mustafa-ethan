@@ -13,13 +13,13 @@ namespace UnitTestsRUs
         }
 
         [Test]
-        public async Task ChangingDatabaseTests()
+        public void ChangingDatabaseTests()
         {
             Assert.True(true);
         }
 
         [Test]
-        public async Task NotChangingDatabaseTests()
+        public void NotChangingDatabaseTests()
         {
             Assert.True(true);
         }
