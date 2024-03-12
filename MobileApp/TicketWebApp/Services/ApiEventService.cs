@@ -20,7 +20,7 @@ public class ApiEventService(IDbContextFactory<PostgresContext> dbFactory) : IEv
         };
 
         var value = await context.Events.AddAsync(newEvent);
-        context.SaveChangesAsync();
+        await context.SaveChangesAsync();
 
         return newEvent;
     }
