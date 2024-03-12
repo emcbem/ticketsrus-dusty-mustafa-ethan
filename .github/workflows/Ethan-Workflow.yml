@@ -24,11 +24,10 @@ jobs:
         if: failure()
         with:
           webhook_url: ${{ secrets.TEAMS_WEBHOOK }}
-          status: Failure
           overwrite: "{title: `Ethan's Runner failed! Point and laugh. ${workflow_link}`}"
       - name: Microsoft Teams Notification
         uses: skitionek/notify-microsoft-teams@master
         if: steps.compose.outcome == 'success'
         with:
           webhook_url: ${{ secrets.TEAMS_WEBHOOK }}
-          status: Success
+        
