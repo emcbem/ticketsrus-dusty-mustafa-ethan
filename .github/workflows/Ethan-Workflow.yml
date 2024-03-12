@@ -6,10 +6,7 @@ jobs:
     steps:
       - name: "Stop old compose"
         run: |
-            cd ./ticketsrus-dusty-mustafa-ethan/MobileApp/TicketWebApp/
-            dotnet clean 
-            cd ../
-            cd ./EthansDockerFiles
+            cd ./ticketsrus-dusty-mustafa-ethan/MobileApp/EthansDockerFiles
             docker compose down -v 
             cd ../../../ 
             rm -rf ./ticketsrus-dusty-mustafa-ethan/ 
