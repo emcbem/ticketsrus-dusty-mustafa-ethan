@@ -12,16 +12,19 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(var ticket in AllTickets)
+        @if (AllTickets is not null)
         {
-            <tr>
-                <th scope="row">@ticket.Id</th>
-                <td>@ticket?.Name</td>
-                <td>@ticket?.Event?.Name</td>
-                <td>@ticket?.Isscanned</td>
-            </tr>
+            @foreach (var ticket in AllTickets)
+            {
+                <tr>
+                    <th scope="row">@ticket.Id</th>
+                    <td>@ticket?.Name</td>
+                    <td>@ticket?.Event?.Name</td>
+                    <td>@ticket?.Isscanned</td>
+                </tr>
+            }
         }
-        
+
     </tbody>
 </table>
 
@@ -46,9 +49,9 @@
             }
             catch
             {
-                
+
             }
-            StateHasChanged();  
+            StateHasChanged();
         });
     }
 }

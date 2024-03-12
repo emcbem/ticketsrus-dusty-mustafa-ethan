@@ -20,8 +20,4 @@ public class AlreadyScannedTicketException : Exception
     public AlreadyScannedTicketException(string? message, Exception? innerException) : base(message, innerException)
     {
     }
-
-    protected AlreadyScannedTicketException(SerializationInfo info, StreamingContext context) : base(info, context)
-    {
-    }
 }

@@ -65,7 +65,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        MyEvent = await eventService.GetEvent(ev);
+        if(eventService is not null)
+        {
+            MyEvent = await eventService.GetEvent(ev) ?? new Event();
+        }
     }
 
     public async Task HandleSubmit()
@@ -76,7 +79,7 @@
 
         try
         {
-            CustomerEmail = new MailAddress(email);
+            CustomerEmail = new MailAddress(email ?? "");
             SendEmail(ticket.Id);
             name = "";
             email = "";
@@ -91,7 +94,7 @@
 
     void SendEmail(Guid ticketId)
     {
-        message = sender.sendEmail(CustomerEmail, ticketId);
+        message = sender.sendEmail(CustomerEmail ?? throw new Exception("BWAH"), ticketId);
     }
 
 }
