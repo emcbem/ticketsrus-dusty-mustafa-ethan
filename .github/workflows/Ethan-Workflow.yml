@@ -18,7 +18,7 @@ jobs:
       - name: "Lint and Build Warnings"
         run: |
             dotnet format --verify-no-changes
-            dotnet build --warnaserrors
+            dotnet build --warnaserror
         working-directory: ./../../../../ticketsrus-dusty-mustafa-ethan/MobileApp/TicketWebApp/
       - name: "Run docker-compose up"
         id: compose
