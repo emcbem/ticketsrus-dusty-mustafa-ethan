@@ -22,7 +22,7 @@ services:
       otel:
 
   blazorapp:
-    container_name: blazorapp
+    container_name: ethanblazorapp
     build: ..
     ports:
       - 8070:8080
@@ -42,7 +42,7 @@ services:
       otel:
 
   blackbox:
-    container_name: blackbox
+    container_name: ethanblackbox
     image: prom/blackbox-exporter:v0.12.0
     ports:
     - 9116:9115
@@ -70,7 +70,7 @@ services:
       otel:
 
   grafana:
-    container_name: grafana
+    container_name: ethangrafana
     image: grafana/grafana:9.4.7
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=true
@@ -99,7 +99,7 @@ services:
       otel:
 
   otel-collector:
-    container_name: otel
+    container_name: ethanotel
     hostname: otel
     image: otel/opentelemetry-collector-contrib:0.75.0
     command: ["--config=/etc/otel-collector-config.yaml"]
