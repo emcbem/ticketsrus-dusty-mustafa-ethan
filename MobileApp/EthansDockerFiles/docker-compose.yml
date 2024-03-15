@@ -113,6 +113,17 @@ services:
     #  - 13133:13133 # Health check
     networks:
       otel:
+    depends_on:
+    - zipkin
+
+  zipkin:
+    image: ghcr.io/openzipkin/zipkin-slim:${TAG:-latest}
+    container_name: ethanzipkin
+    environment:
+      - STORAGE_TYPE=mem
+    ports:
+      # Port used for the Zipkin UI and HTTP Api
+      - 9411:9411
 
 networks:
   otel:

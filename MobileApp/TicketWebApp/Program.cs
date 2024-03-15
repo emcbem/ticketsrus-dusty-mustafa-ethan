@@ -11,6 +11,7 @@ using TicketWebApp.Services;
 using TicketWebApp.Components;
 using OpenTelemetry.Logs;
 using System.Diagnostics.Tracing;
+using TicketWebApp.Telemetry;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,20 +48,30 @@ builder.Logging.AddOpenTelemetry(options =>
        ;
 });
 
+
 builder.Services.AddOpenTelemetry()
-     .ConfigureResource(resource => resource.AddService(serviceName))
+     .ConfigureResource(resource => resource.AddService(EthanTraces.Name))
      .WithTracing(tracing => tracing
+         .AddSource(EthanTraces.Name)
          .AddAspNetCoreInstrumentation()
          //.AddConsoleExporter()
          .AddOtlpExporter(o =>
            o.Endpoint = new Uri("http://otel-collector:4317/")))
      .WithMetrics(metrics => metrics
          .AddAspNetCoreInstrumentation()
-         // .AddConsoleExporter()
+         .AddMeter(EthanMetrics.Meter.Name)
+         .AddConsoleExporter()
+         .AddOtlpExporter(o =>
+           o.Endpoint = new Uri("http://otel-collector:4317/")))
+    .ConfigureResource(res => res.AddService("NewOne"))
+    .WithTracing(t => t
+         .AddSource(EthanSecondTraces.Name)
+         .AddAspNetCoreInstrumentation()
+         //.AddConsoleExporter()
          .AddOtlpExporter(o =>
            o.Endpoint = new Uri("http://otel-collector:4317/")));
 
-
+builder.Services.AddAntiforgery(options => { options.Cookie.Expiration = TimeSpan.Zero; });
 
 
 var app = builder.Build();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using TicketClassLib.Data;
+using TicketWebApp.Telemetry;
 
 namespace TicketWebApp.Data;
 
@@ -14,6 +15,8 @@ public partial class PostgresContext : DbContext
     public PostgresContext(DbContextOptions<PostgresContext> options)
         : base(options)
     {
+        using var currentTrace = EthanTraces.MyActivitySource.StartActivity("thingy");
+        currentTrace?.AddEvent(new("Getting all events"));
     }
 
     public virtual DbSet<Event> Events { get; set; }

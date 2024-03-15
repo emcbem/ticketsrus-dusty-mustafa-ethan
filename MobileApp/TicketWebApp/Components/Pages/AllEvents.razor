@@ -1,5 +1,6 @@
 ﻿@page "/all"
 @rendermode InteractiveServer
+@using TicketWebApp.Telemetry
 
 @inject IEventService eventService 
 @inject NavigationManager NavManager;
@@ -26,6 +27,9 @@
 
     protected override async Task OnInitializedAsync()
     {
+        EthanMetrics.hitCount.Add(5);
+        using var currentTrace = EthanSecondTraces.MyActivitySource.StartActivity("thingy");
+        
         eventsList = await eventService.GetAll();
         //return base.OnInitializedAsync();
     }

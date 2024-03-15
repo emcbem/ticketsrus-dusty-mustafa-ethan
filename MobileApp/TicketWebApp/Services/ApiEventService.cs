@@ -4,6 +4,7 @@ using TicketClassLib.Data;
 using TicketClassLib.Services;
 using TicketWebApp.Data;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using TicketWebApp.Telemetry;
 
 namespace TicketWebApp.Services;
 
@@ -11,6 +12,7 @@ public class ApiEventService(IDbContextFactory<PostgresContext> dbFactory) : IEv
 {
     public async Task<Event> AddEvent(string name, DateTime date)
     {
+
         using var context = await dbFactory.CreateDbContextAsync();
         Event newEvent = new Event()
         {
@@ -37,8 +39,10 @@ public class ApiEventService(IDbContextFactory<PostgresContext> dbFactory) : IEv
 
     public async Task<List<Event>> GetAll()
     {
+        using var currentTrace = EthanTraces.MyActivitySource.StartActivity("thingy");
         using var context = await dbFactory.CreateDbContextAsync();
 
+        currentTrace?.AddEvent(new("Getting all events"));
         return await context.Events
             .Include(e => e.Tickets)
             .ToListAsync();
