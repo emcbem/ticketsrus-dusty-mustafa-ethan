@@ -21,6 +21,5 @@ public class EventController(IEventService eventService) : ControllerBase
     {
         var newEvent = await eventService.AddEvent(name, date);
         return newEvent;
-        System.Console.WriteLine();
     }
 }
