@@ -20,4 +20,4 @@ scrape_configs:
     - targets: ['otel-collector:8888']
   - job_name: 'CollectMetrics'
     static_configs:
-    - targets: ['otel-collector:1234']
+    - targets: ['otel-collector:3628']
