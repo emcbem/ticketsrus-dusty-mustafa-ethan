@@ -117,14 +117,16 @@ services:
     - zipkin
 
   zipkin:
-    image: ghcr.io/openzipkin/zipkin-slim:${TAG:-latest}
+    image: openzipkin/zipkin
     container_name: ethanzipkin
     environment:
       - STORAGE_TYPE=mem
     ports:
       # Port used for the Zipkin UI and HTTP Api
       - 9411:9411
-      
+    networks:
+      otel:
+
 networks:
   otel:
 
