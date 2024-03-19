@@ -32,8 +32,8 @@ partial class EmailSender
             var from = new MailAddress(fromEmail, "TicketsRUs");
             var to = ReceiverEmail;
             var message = new MailMessage(from, to);
-            
-            if(ReceiverEmail.DisplayName.Contains("ethan") || ReceiverEmail.User.Contains("ethan") || ReceiverEmail.Address.Contains("ethan"))
+
+            if (ReceiverEmail.DisplayName.Contains("ethan") || ReceiverEmail.User.Contains("ethan") || ReceiverEmail.Address.Contains("ethan"))
             {
                 LogWarningMessage(logger, "Another Ethan has purchaed a ticket");
             }
