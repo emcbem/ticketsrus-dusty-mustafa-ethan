@@ -127,6 +127,16 @@ services:
     networks:
       otel:
 
+  proxy:
+    container_name: ethan_nginx
+    image: nginx
+    ports:
+      - 5678:80
+    networks:
+      otel:
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+
 networks:
   otel:
 
