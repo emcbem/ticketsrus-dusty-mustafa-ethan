@@ -27,6 +27,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - TicketsDB=user id = postgres; password=postgres; server=db; database= postgres; port= 5432
+      - DustySecret=${DUSTYSECRET}
+      - DustysEmail=${DUSTYEMAIL}
     depends_on:
       - db
     healthcheck:
