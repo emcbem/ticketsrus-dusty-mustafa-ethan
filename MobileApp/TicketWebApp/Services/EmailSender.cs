@@ -76,7 +76,7 @@ partial class EmailSender
             timer.Start();
             client.Send(message);
             timer.Stop();
-            
+
 
             EthanMetrics.totalEmailTime.Record(timer.ElapsedMilliseconds);
 

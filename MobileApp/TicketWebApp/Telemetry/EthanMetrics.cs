@@ -17,7 +17,7 @@ public static class EthanMetrics
     public static ObservableGauge<int> currentSecondOfTheDay = Meter.CreateObservableGauge<int>("seconds_of_day", () => DateTime.Now.Second);
     public static Histogram<double> totalEmailTime = Meter.CreateHistogram<double>("email_time");
 
-    static  EthanMetrics()
+    static EthanMetrics()
     {
 
     }
