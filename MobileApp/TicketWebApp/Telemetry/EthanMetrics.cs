@@ -15,5 +15,5 @@ public static class EthanMetrics
     public static ObservableCounter<int> totalEventsGrabbed = Meter.CreateObservableCounter<int>("events_seen_total", () => EventsCalled);
     public static ObservableUpDownCounter<int> currentTicketsScanned = Meter.CreateObservableUpDownCounter<int>("Total tickets scanned", () => TotalTicketsScanned);
     public static ObservableGauge<int> currentActiveUsers = Meter.CreateObservableGauge<int>("Total Active Users", () => TotalUsersActive);
-    public static Histogram<TimeSpan> totalEmailTime = Meter.CreateHistogram<TimeSpan>("Time it takes an email to send");
+    public static Histogram<double> totalEmailTime = Meter.CreateHistogram<double>("Time it takes an email to send");
 }
