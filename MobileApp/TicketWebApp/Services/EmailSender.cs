@@ -1,7 +1,9 @@
 ﻿using MailKit.Net.Smtp;
 using QRCoder;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Mail;
+using TicketWebApp.Telemetry;
 namespace TicketWebApp.Services;
 
 partial class EmailSender
@@ -61,17 +63,23 @@ partial class EmailSender
                 </body></html>";
 
 
-            using (var client = new System.Net.Mail.SmtpClient("smtp.gmail.com"))
-            {
-                client.Port = 587;
-                client.EnableSsl = true;
+            using var client = new System.Net.Mail.SmtpClient("smtp.gmail.com");
+
+            client.Port = 587;
+            client.EnableSsl = true;
 
 
-                // Note: only needed if the SMTP server requires authentication
-                client.Credentials = new NetworkCredential(fromEmail, secretSender);
+            // Note: only needed if the SMTP server requires authentication
+            client.Credentials = new NetworkCredential(fromEmail, secretSender);
 
-                client.Send(message);
-            }
+            var timer = new Stopwatch();
+            timer.Start();
+            client.Send(message);
+            timer.Stop();
+            
+
+            EthanMetrics.totalEmailTime.Record(timer.ElapsedMilliseconds);
+
             LogInformationMessage(logger, "An email was successfully sent");
             return "Email Sent";
         }

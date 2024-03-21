@@ -5,6 +5,7 @@ using TicketClassLib.Exceptions;
 using TicketClassLib.Requests;
 using TicketClassLib.Services;
 using TicketWebApp.Data;
+using TicketWebApp.Telemetry;
 
 
 namespace TicketWebApp.Services;
@@ -39,6 +40,8 @@ public partial class ApiTicketService(IDbContextFactory<PostgresContext> dbFacto
         await context.SaveChangesAsync();
 
         TicketsHaveChanged?.Invoke(this, new EventArgs());
+
+        EthanMetrics._totalTicketsUnscanned++;
 
         LogInformationMessage(logger, $"A new ticket was created with the id {ticket.Id}");
 
@@ -76,6 +79,8 @@ public partial class ApiTicketService(IDbContextFactory<PostgresContext> dbFacto
 
         TicketsHaveChanged?.Invoke(this, new EventArgs());
 
+        EthanMetrics._totalTicketsUnscanned--;
+
         return TicketStatus.Success;
     }
 
@@ -87,6 +92,8 @@ public partial class ApiTicketService(IDbContextFactory<PostgresContext> dbFacto
         await context.SaveChangesAsync();
 
         TicketsHaveChanged?.Invoke(this, new EventArgs());
+
+        EthanMetrics._totalTicketsUnscanned++;
 
         return ticket;
     }

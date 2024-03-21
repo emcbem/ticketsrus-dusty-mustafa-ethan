@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using TicketWebApp.Telemetry
 @inject ILogger<Home> log
 
 <PageTitle>Home</PageTitle>
@@ -13,6 +14,7 @@ Buy Tickets and scan your ticket at the gate.<br />
     protected override void OnInitialized()
     {
         log.LogInformation("We started!");
+        EthanMetrics.WheneverIFeelLikeIt.Add(Random.Shared.Next(-10, 10));
     }
 }
 
