@@ -27,11 +27,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        EthanMetrics.hitCount.Add(5);
         using var currentTrace = EthanSecondTraces.MyActivitySource.StartActivity("thingy");
         
         eventsList = await eventService.GetAll();
         //return base.OnInitializedAsync();
+        EthanMetrics.hitCount.Add(eventsList.Count());
     }
 
     public void HandleClick(int ev)

@@ -49,9 +49,13 @@ public partial class ApiEventService(IDbContextFactory<PostgresContext> dbFactor
         using var context = await dbFactory.CreateDbContextAsync();
 
         currentTrace?.AddEvent(new("Getting all events"));
-        return await context.Events
+        var events = await context.Events
             .Include(e => e.Tickets)
             .ToListAsync();
+
+        EthanMetrics.EventsCalled += events.Count();
+
+        return events;
     }
 
     public async Task<Event?> GetEvent(int id)
