@@ -148,7 +148,7 @@ services:
       - ./nginx:/config/nginx/site-confs/
     ports:
       - 1267:443
-      - 80:80 #optional
+      # - 80:80 #optional
     restart: unless-stopped
 
 
