@@ -107,7 +107,7 @@ services:
     #  - 9200:55679  # zpages
     #  - 13133:13133 # Health check
     depends_on:
-    - zipkin
+      - zipkin
 
   zipkin:
     image: openzipkin/zipkin
@@ -145,7 +145,7 @@ services:
       - STAGING=false #optional
     volumes:
       - swag-data:/config
-      - ./nginx:/config/nginx/site-confs/
+      - ./nginx/nginx-default.conf:/config/nginx/site-confs/mysite.conf
     ports:
       - 1267:443
       # - 80:80 #optional
