@@ -26,8 +26,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - TicketsDB=user id = postgres; password=postgres; server=db; database= postgres; port= 5432
-      - DustySecret=${DUSTYSECRET}
-      - DustysEmail=${DUSTYEMAIL}
+      - DustySecret=${DUSTYSECRET:-thisIsDefault}
+      - DustysEmail=${DUSTYEMAIL:-thisIsDefault}
     depends_on:
       - db
     healthcheck:
@@ -141,7 +141,7 @@ services:
       - URL=ethanscrazysite.duckdns.org
       - SUBDOMAINS=www,
       - VALIDATION=duckdns
-      - DUCKDNSTOKEN=${DUCKDNS} #optional
+      - DUCKDNSTOKEN=${DUCKDNS:-blahblahblah} #optional
       - STAGING=false #optional
     volumes:
       - swag-data:/config
