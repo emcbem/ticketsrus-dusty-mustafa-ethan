@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: alex
+  namespace: ethan
   name: blazor-web-service
 spec:
   type: ClusterIP
