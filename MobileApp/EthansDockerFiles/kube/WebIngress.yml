@@ -4,7 +4,7 @@ metadata:
   namespace: ethan
   name: blazor-web-ingress
 spec:
-  ingressClassName: blazor-web
+  ingressClassName: nginx
   rules:
   - host: ethanscrazykubernetes.duckdns.org
     http:

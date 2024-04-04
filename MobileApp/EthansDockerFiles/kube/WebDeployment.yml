@@ -4,19 +4,19 @@ metadata:
   namespace: ethan
   name: blazor-web-deployment
   labels:
-    app: blazor-web
+    app: nginx
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: blazor-web
+      app: nginx
   template:
     metadata:
       labels:
-        app: blazor-web
+        app: nginx
     spec:
       containers:
-      - name: blazor-web
+      - name: nginx
         image: 144.17.92.12:5000/ethan/blazor-web:1
         ports:
         - containerPort: 8080
