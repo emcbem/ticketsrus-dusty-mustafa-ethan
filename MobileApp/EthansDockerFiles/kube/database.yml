@@ -42,8 +42,8 @@ spec:
         volumeMounts:
         - name: postgresstorage
           mountPath: /var/lib/postgresql/data
-        # - name: init-script
-        #   mountPath: /docker-entrypoint-initdb.d
+        - name: init-script
+          mountPath: /docker-entrypoint-initdb.d
       volumes:
       - name: postgresstorage
         persistentVolumeClaim:
