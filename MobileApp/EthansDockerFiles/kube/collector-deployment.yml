@@ -18,12 +18,11 @@ spec:
       containers:
       - name: otel-collector
         image: otel/opentelemetry-collector-contrib:0.75.0
-        command: ["--config=/etc/otel-collector-config.yaml"]
         ports:
         - containerPort: 4317
         volumeMounts:
         - name: otel-config-volume
-          mountPath: /etc/otel-collector-config.yaml
+          mountPath: /etc/otelcol-contrib/config.yaml
           subPath: otel.yml
       volumes:
       - name: otel-config-volume

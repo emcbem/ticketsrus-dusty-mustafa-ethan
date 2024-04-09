@@ -28,6 +28,7 @@ services:
       - TicketsDB=user id = postgres; password=postgres; server=db; database= postgres; port= 5432
       - DustySecret=${DUSTYSECRET:-thisIsDefault}
       - DustysEmail=${DUSTYEMAIL:-thisIsDefault}
+      - COLLECTOR_URL=http://otel-collector:4317
     depends_on:
       - db
     healthcheck:
