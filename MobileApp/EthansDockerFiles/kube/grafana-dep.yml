@@ -28,9 +28,9 @@ spec:
         - name: GF_AUTH_DISABLE_LOGIN_FORM
           value: "true"
         volumeMounts:
-        - name: grafanaFiles
+        - name: grafana-files
           mountPath: /etc/grafana/provisioning
       volumes:
-      - name: grafanaFiles
+      - name: grafana-files
         configMap:
           name: grafana-files
