@@ -28,9 +28,14 @@ spec:
         - name: GF_AUTH_DISABLE_LOGIN_FORM
           value: "true"
         volumeMounts:
-        - name: grafana-files
-          mountPath: /etc/grafana/provisioning
+        - name: grafana-datasource-files
+          mountPath: /etc/grafana/provisioning/datasources
+        - name: grafana-dashboard-files
+          mountPath: /etc/grafana/provisioning/dashboards
       volumes:
-      - name: grafana-files
+      - name: grafana-datasource-files
         configMap:
-          name: grafana-files
+          name: grafana-datasource-files
+      - name: grafana-dashboard-files
+        configMap:
+          name: grafana-dashboard-files
