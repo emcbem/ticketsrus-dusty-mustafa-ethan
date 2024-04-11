@@ -8,7 +8,7 @@ exporters:
   # prometheus:
     # endpoint: "0.0.0.0:3628"
   loki:
-    endpoint: "http://loki:3100/loki/api/v1/push"
+    endpoint: "http://loki-service:3100/loki/api/v1/push"
   # zipkin: 
   #   endpoint: "http://zipkin:9411/api/v2/spans"
 
