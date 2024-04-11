@@ -42,10 +42,10 @@ jobs:
               cd ./grafana
                 cd ./datasources
                   kubectl -n ethan delete configmap grafana-datasource-files || true
-                  kubectl -n ethan create configmap grafana-datasource-files
+                  kubectl -n ethan create configmap grafana-datasource-files --from-file=.
                 cd ../dashboards
                   kubectl -n ethan delete configmap grafana-dashboard-files || true
-                  kubectl -n ethan create configmap grafana-dashboard-files
+                  kubectl -n ethan create configmap grafana-dashboard-files --from-file=.
 
 
             cd ../../..
