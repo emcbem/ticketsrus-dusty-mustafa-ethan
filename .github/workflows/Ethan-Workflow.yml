@@ -30,9 +30,9 @@ jobs:
       #   working-directory: ./../../../../ticketsrus-dusty-mustafa-ethan/MobileApp/TestsRUS
       - name: "Build and add tag"
         run: |
-            docker build -t 144.17.92.12:5000/ethan/blazor-web:1 .
+            docker build -t 144.17.92.12:5000/ethan/blazor-web:$GITHUB_RUN_ID .
 
-            docker push 144.17.92.12:5000/ethan/blazor-web:1
+            docker push 144.17.92.12:5000/ethan/blazor-web:$GITHUB_RUN_ID
             
             # kubectl -n ethan create configmap blazor-web-postgres-init --from-file=init.sql
             cd ./EthansDockerFiles/kube-configs
