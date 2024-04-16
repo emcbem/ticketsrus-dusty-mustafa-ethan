@@ -49,7 +49,12 @@ jobs:
 
 
             cd ../../..
-            kubectl apply -f kube/
+
+            for file in ./kube; do
+              echo "Applying file"
+              cat "$file" | envsub | kubectly apply -f -
+            done
+
         working-directory: ./../../../../ticketsrus-dusty-mustafa-ethan/MobileApp/
       - name: "Run docker-compose up"
         id: compose
