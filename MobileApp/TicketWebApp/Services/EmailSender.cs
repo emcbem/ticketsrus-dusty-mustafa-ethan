@@ -1,19 +1,30 @@
 ﻿using MailKit.Net.Smtp;
 using QRCoder;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Mail;
+using TicketWebApp.Telemetry;
 namespace TicketWebApp.Services;
-class EmailSender
+
+partial class EmailSender
 {
 
     private string secretSender { get; set; }
     private string fromEmail { get; set; }
+    private ILogger<EmailSender> logger;
 
-    public EmailSender(IConfiguration config)
+    public EmailSender(IConfiguration config, ILogger<EmailSender> logger)
     {
         secretSender = config["DustySecret"] ?? throw new Exception("Missing dusty email config");
         fromEmail = config["DustysEmail"] ?? throw new Exception("Missing dusty email password config");
+        this.logger = logger;
     }
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Email Service: {Description}")]
+    static partial void LogInformationMessage(ILogger logger, string description);
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Email Service: {Description}")]
+    static partial void LogWarningMessage(ILogger logger, string description);
 
     public string sendEmail(MailAddress ReceiverEmail,
                             Guid ticketId)
@@ -24,6 +35,10 @@ class EmailSender
             var to = ReceiverEmail;
             var message = new MailMessage(from, to);
 
+            if (ReceiverEmail.DisplayName.Contains("ethan") || ReceiverEmail.User.Contains("ethan") || ReceiverEmail.Address.Contains("ethan"))
+            {
+                LogWarningMessage(logger, "Another Ethan has purchaed a ticket");
+            }
             //qrcode generation
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
             QRCodeData qrCodeData = qrGenerator.CreateQrCode(ticketId.ToString(), QRCodeGenerator.ECCLevel.Q);
@@ -48,21 +63,29 @@ class EmailSender
                 </body></html>";
 
 
-            using (var client = new System.Net.Mail.SmtpClient("smtp.gmail.com"))
-            {
-                client.Port = 587;
-                client.EnableSsl = true;
+            using var client = new System.Net.Mail.SmtpClient("smtp.gmail.com");
+
+            client.Port = 587;
+            client.EnableSsl = true;
 
 
-                // Note: only needed if the SMTP server requires authentication
-                client.Credentials = new NetworkCredential(fromEmail, secretSender);
+            // Note: only needed if the SMTP server requires authentication
+            client.Credentials = new NetworkCredential(fromEmail, secretSender);
 
-                client.Send(message);
-            }
+            var timer = new Stopwatch();
+            timer.Start();
+            client.Send(message);
+            timer.Stop();
+
+
+            EthanMetrics.totalEmailTime.Record(timer.ElapsedMilliseconds);
+
+            LogInformationMessage(logger, "An email was successfully sent");
             return "Email Sent";
         }
         catch
         {
+            LogWarningMessage(logger, "An email was supposed to send but it didn't work");
             return "Bad Exception Happend";
         }
     }

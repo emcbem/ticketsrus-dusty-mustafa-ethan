@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ethan
+  name: blazor-web-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: 144.17.92.12:5000/ethan/blazor-web:1
+        ports:
+        - containerPort: 8080
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: Development
+        - name: TicketsDB
+          value: user id = postgres; password=postgres; server=blazor-web-db-service; database= postgres; port= 5432
+        - name: COLLECTOR_URL
+          value: http://otel-collector-service:4317/

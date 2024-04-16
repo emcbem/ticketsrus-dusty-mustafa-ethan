@@ -5,12 +5,19 @@ using TicketClassLib.Exceptions;
 using TicketClassLib.Requests;
 using TicketClassLib.Services;
 using TicketWebApp.Data;
+using TicketWebApp.Telemetry;
 
 
 namespace TicketWebApp.Services;
 
-public class ApiTicketService(IDbContextFactory<PostgresContext> dbFactory) : ITicketService
+public partial class ApiTicketService(IDbContextFactory<PostgresContext> dbFactory, ILogger<ApiTicketService> logger) : ITicketService
 {
+    [LoggerMessage(Level = LogLevel.Information, Message = "Ticket Service: {Description}")]
+    static partial void LogInformationMessage(ILogger logger, string description);
+
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Ticket Service: {Description}")]
+    static partial void LogWarningInformation(ILogger logger, string description);
 
     public event EventHandler? TicketsHaveChanged;
 
@@ -33,13 +40,17 @@ public class ApiTicketService(IDbContextFactory<PostgresContext> dbFactory) : IT
         await context.SaveChangesAsync();
 
         TicketsHaveChanged?.Invoke(this, new EventArgs());
+
+        EthanMetrics._totalTicketsUnscanned++;
+
+        LogInformationMessage(logger, $"A new ticket was created with the id {ticket.Id}");
+
         return ticket;
-
-
     }
 
     public async Task<List<Ticket>> GetAll()
     {
+        LogWarningInformation(logger, $"All the tickets were got at {DateTime.Now}");
         using var context = await dbFactory.CreateDbContextAsync();
         return await context.Tickets
             .Include(t => t.Event)
@@ -68,6 +79,8 @@ public class ApiTicketService(IDbContextFactory<PostgresContext> dbFactory) : IT
 
         TicketsHaveChanged?.Invoke(this, new EventArgs());
 
+        EthanMetrics._totalTicketsUnscanned--;
+
         return TicketStatus.Success;
     }
 
@@ -79,6 +92,8 @@ public class ApiTicketService(IDbContextFactory<PostgresContext> dbFactory) : IT
         await context.SaveChangesAsync();
 
         TicketsHaveChanged?.Invoke(this, new EventArgs());
+
+        EthanMetrics._totalTicketsUnscanned++;
 
         return ticket;
     }

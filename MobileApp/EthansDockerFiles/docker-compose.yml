@@ -16,8 +16,7 @@ services:
     #   timeout: 1s
     #   retries: 1
     #   start_period: 6s 
-    networks:
-      otel:
+
 
   blazorapp:
     container_name: ethanblazorapp
@@ -27,6 +26,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - TicketsDB=user id = postgres; password=postgres; server=db; database= postgres; port= 5432
+      - DustySecret=${DUSTYSECRET:-thisIsDefault}
+      - DustysEmail=${DUSTYEMAIL:-thisIsDefault}
+      - COLLECTOR_URL=http://otel-collector:4317
     depends_on:
       - db
     healthcheck:
@@ -36,8 +38,7 @@ services:
       start_period: 6s
       timeout: 1s
     restart: unless-stopped
-    networks:
-      otel:
+
 
   blackbox:
     container_name: ethanblackbox
@@ -50,8 +51,7 @@ services:
     - ./blackbox.yml:/etc/blackbox/blackbox.yml
     depends_on:
     - blazorapp
-    networks:
-      otel:
+
 
   prometheus:
     container_name: ethanprometheus
@@ -64,8 +64,7 @@ services:
     - ./prometheus.yml:/etc/prometheus/prometheus.yml
     depends_on:
     - blackbox
-    networks:
-      otel:
+
 
   grafana:
     container_name: ethangrafana
@@ -81,8 +80,7 @@ services:
       - ./grafana:/etc/grafana/provisioning
     ports:
      - 3210:3000
-    networks:
-      otel:
+
 
   loki:
     image: grafana/loki:2.8.0
@@ -93,8 +91,6 @@ services:
     restart: unless-stopped
     #ports:
       #- 3100:3100
-    networks:
-      otel:
 
   otel-collector:
     container_name: ethanotel
@@ -111,13 +107,11 @@ services:
     #  - 4318:4318   # OTLP http receiver
     #  - 9200:55679  # zpages
     #  - 13133:13133 # Health check
-    networks:
-      otel:
     depends_on:
-    - zipkin
+      - zipkin
 
   zipkin:
-    image: ghcr.io/openzipkin/zipkin-slim:${TAG:-latest}
+    image: openzipkin/zipkin
     container_name: ethanzipkin
     environment:
       - STORAGE_TYPE=mem
@@ -125,8 +119,41 @@ services:
       # Port used for the Zipkin UI and HTTP Api
       - 9411:9411
 
-networks:
-  otel:
+
+  # proxy:
+  #   container_name: ethan_nginx
+  #   image: nginx
+  #   ports:
+  #     - 5678:80
+  #   networks:
+  #     otel:
+  #   volumes:
+  #     - ./nginx:/etc/nginx/conf.d
+
+  swag:
+    image: lscr.io/linuxserver/swag
+    container_name: swag
+    cap_add:
+      - NET_ADMIN
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Denver
+      - URL=ethanscrazysite.duckdns.org
+      - SUBDOMAINS=www,
+      - VALIDATION=duckdns
+      - DUCKDNSTOKEN=${DUCKDNS:-blahblahblah} #optional
+      - STAGING=false #optional
+    volumes:
+      - swag-data:/config
+      - ./nginx/nginx-default.conf:/config/nginx/site-confs/mysite.conf
+    ports:
+      - 1267:443
+      # - 80:80 #optional
+    restart: unless-stopped
+
+
 
 volumes:
   grafana-data:
+  swag-data:

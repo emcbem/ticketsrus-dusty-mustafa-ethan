@@ -8,11 +8,16 @@ using TicketWebApp.Telemetry;
 
 namespace TicketWebApp.Services;
 
-public class ApiEventService(IDbContextFactory<PostgresContext> dbFactory) : IEventService
+public partial class ApiEventService(IDbContextFactory<PostgresContext> dbFactory, ILogger<ApiEventService> logger) : IEventService
 {
+
+    [LoggerMessage(Level = LogLevel.Information, Message = "Event Service: {Description}")]
+    static partial void LogInformationMessage(ILogger logger, string description);
+
+
     public async Task<Event> AddEvent(string name, DateTime date)
     {
-
+        LogInformationMessage(logger, $"Adding an event named {name}");
         using var context = await dbFactory.CreateDbContextAsync();
         Event newEvent = new Event()
         {
@@ -39,13 +44,18 @@ public class ApiEventService(IDbContextFactory<PostgresContext> dbFactory) : IEv
 
     public async Task<List<Event>> GetAll()
     {
+        LogInformationMessage(logger, "Getting all the events");
         using var currentTrace = EthanTraces.MyActivitySource.StartActivity("thingy");
         using var context = await dbFactory.CreateDbContextAsync();
 
         currentTrace?.AddEvent(new("Getting all events"));
-        return await context.Events
+        var events = await context.Events
             .Include(e => e.Tickets)
             .ToListAsync();
+
+        EthanMetrics.EventsCalled += events.Count();
+
+        return events;
     }
 
     public async Task<Event?> GetEvent(int id)

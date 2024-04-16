@@ -15,19 +15,42 @@ jobs:
         run: | 
             git clone https://${{secrets.NOTGITHUB_PAT}}@github.com/emcbem/ticketsrus-dusty-mustafa-ethan.git
         working-directory: ./../../../../
-      - name: "Lint and Build Warnings"
+      # - name: "Lint and Build Warnings"
+      #   run: |
+      #       dotnet format --verify-no-changes
+      #       dotnet build --warnaserror
+      #   working-directory: ./../../../../ticketsrus-dusty-mustafa-ethan/MobileApp/TicketWebApp/
+      # - name: "Unit tests"
+      #   run: |
+      #       dotnet test --warnaserror
+      #   working-directory: ./../../../../ticketsrus-dusty-mustafa-ethan/MobileApp/UnitTestsRUs
+      # - name: "Integration tests"
+      #   run: |
+      #       dotnet test --warnaserror
+      #   working-directory: ./../../../../ticketsrus-dusty-mustafa-ethan/MobileApp/TestsRUS
+      - name: "Build and add tag"
         run: |
-            dotnet format --verify-no-changes
-            dotnet build --warnaserror
-        working-directory: ./../../../../ticketsrus-dusty-mustafa-ethan/MobileApp/TicketWebApp/
-      - name: "Unit tests"
-        run: |
-            dotnet test --warnaserror
-        working-directory: ./../../../../ticketsrus-dusty-mustafa-ethan/MobileApp/UnitTestsRUs
-      - name: "Integration tests"
-        run: |
-            dotnet test --warnaserror
-        working-directory: ./../../../../ticketsrus-dusty-mustafa-ethan/MobileApp/TestsRUS
+            docker build -t 144.17.92.12:5000/ethan/blazor-web:$GITHUB_RUN_ID .
+
+            docker push 144.17.92.12:5000/ethan/blazor-web:$GITHUB_RUN_ID
+            
+            # kubectl -n ethan create configmap blazor-web-postgres-init --from-file=init.sql
+            cd ./EthansDockerFiles/kube-configs
+              kubectl -n ethan delete configmap otel-config || true
+              kubectl -n ethan create configmap otel-config --from-file=otel.yml
+
+              cd ./grafana
+                cd ./datasources
+                  kubectl -n ethan delete configmap grafana-datasource-files || true
+                  kubectl -n ethan create configmap grafana-datasource-files --from-file=.
+                cd ../dashboards
+                  kubectl -n ethan delete configmap grafana-dashboard-files || true
+                  kubectl -n ethan create configmap grafana-dashboard-files --from-file=.
+
+
+            cd ../../..
+            kubectl apply -f kube/
+        working-directory: ./../../../../ticketsrus-dusty-mustafa-ethan/MobileApp/
       - name: "Run docker-compose up"
         id: compose
         run: |

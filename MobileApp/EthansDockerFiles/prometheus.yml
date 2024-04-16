@@ -6,7 +6,7 @@ scrape_configs:
       module: [http_2xx]
     static_configs:
       - targets:
-        - http://host.docker.internal:8070/healthcheck
+        - http://blazorapp:8080/healthcheck
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
@@ -20,4 +20,4 @@ scrape_configs:
     - targets: ['otel-collector:8888']
   - job_name: 'CollectMetrics'
     static_configs:
-    - targets: ['otel-collector:1234']
+    - targets: ['otel-collector:3628']

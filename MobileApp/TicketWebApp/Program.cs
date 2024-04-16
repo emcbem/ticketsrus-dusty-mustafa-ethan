@@ -33,6 +33,7 @@ builder.Services.AddHealthChecks();
 builder.Services.AddLogging();
 
 const string serviceName = "thingy";
+string otelString = builder.Configuration["COLLECTOR_URL"] ?? throw new NullReferenceException("Environment variable not set: COLLECTOR_URL");
 
 builder.Logging.AddOpenTelemetry(options =>
 {
@@ -42,9 +43,9 @@ builder.Logging.AddOpenTelemetry(options =>
                 .AddService(serviceName))
         .AddOtlpExporter(o =>
         {
-            o.Endpoint = new Uri("http://otel-collector:4317/");
+            o.Endpoint = new Uri(otelString);
         })
-       // .AddConsoleExporter()
+       .AddConsoleExporter()
        ;
 });
 
@@ -56,20 +57,20 @@ builder.Services.AddOpenTelemetry()
          .AddAspNetCoreInstrumentation()
          //.AddConsoleExporter()
          .AddOtlpExporter(o =>
-           o.Endpoint = new Uri("http://otel-collector:4317/")))
+           o.Endpoint = new Uri(otelString)))
      .WithMetrics(metrics => metrics
          .AddAspNetCoreInstrumentation()
          .AddMeter(EthanMetrics.Meter.Name)
-         .AddConsoleExporter()
+         // .AddConsoleExporter()
          .AddOtlpExporter(o =>
-           o.Endpoint = new Uri("http://otel-collector:4317/")))
+           o.Endpoint = new Uri(otelString)))
     .ConfigureResource(res => res.AddService("NewOne"))
     .WithTracing(t => t
          .AddSource(EthanSecondTraces.Name)
          .AddAspNetCoreInstrumentation()
          //.AddConsoleExporter()
          .AddOtlpExporter(o =>
-           o.Endpoint = new Uri("http://otel-collector:4317/")));
+           o.Endpoint = new Uri(otelString)));
 
 builder.Services.AddAntiforgery(options => { options.Cookie.Expiration = TimeSpan.Zero; });
 
