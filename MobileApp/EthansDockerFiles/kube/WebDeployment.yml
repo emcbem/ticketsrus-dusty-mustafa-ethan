@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: 144.17.92.12:5000/ethan/blazor-web:1
+        image: 144.17.92.12:5000/ethan/blazor-web:${RUN_ID}
         ports:
         - containerPort: 8080
         env:
