@@ -50,7 +50,7 @@ jobs:
 
             cd ../../..
 
-            RUN_ID=${{ github.run_id }}
+            export RUN_ID=${{ github.run_id }}
             for file in ./kube/*; do
               echo "Applying file"
               cat "$file" | envsubst | kubectl apply -f -
