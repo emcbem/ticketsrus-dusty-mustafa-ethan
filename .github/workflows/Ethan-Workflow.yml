@@ -53,7 +53,7 @@ jobs:
             RUN_ID=${{ github.run_id }}
             for file in ./kube/*; do
               echo "Applying file"
-              cat "$file" | envsub | kubectl apply -f -
+              cat "$file" | envsubst | kubectl apply -f -
             done
 
         working-directory: ./../../../../ticketsrus-dusty-mustafa-ethan/MobileApp/
