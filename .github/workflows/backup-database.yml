@@ -8,7 +8,7 @@ jobs:
       - name: backup
         run: |
           mkdire -p /home/ethane/dumps
-          CONTAINER_NAME=kubectl -n ethan get pods --no-headers -o custom-columns=":metadata.name" | grep blazor-web-db-deployment
+          CONTAINER_NAME=$(kubectl -n ethan get pods --no-headers -o custom-columns=":metadata.name" | grep blazor-web-db-deployment)
           kubectl -n ethan exec -t $CONTAINER_NAME -- \
             pg_dumpall -c -U postgres \
             > /home/ethane/dumps/ticketsdump.sql
