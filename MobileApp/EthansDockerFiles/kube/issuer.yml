@@ -8,11 +8,11 @@ metadata:
 spec:
   tls:
   - hosts:
-    - cert.mysanpetekube.duckdns.org
+    - ethanscrazykubernetes.duckdns.org
     secretName: ethane-kube-tls-production
   ingressClassName: nginx
   rules:
-  - host: cert.mysanpetekube.duckdns.org
+  - host: ethanscrazykubernetes.duckdns.org
     http:
       paths:
       - path: /
